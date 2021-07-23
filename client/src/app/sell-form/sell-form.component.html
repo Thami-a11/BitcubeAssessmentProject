@@ -1,0 +1,32 @@
+<form [formGroup]='SellForm' (ngSubmit)="SellForm.valid && submit()" autocomplete="off">
+    <div class="boarder">
+      <mat-form-field appearance="fill">
+        <mat-label>Select Item </mat-label>
+        <mat-select formControlName="item">
+          <mat-option>--</mat-option>
+          <mat-option *ngFor="let p of products?.products" [value]="p.item">
+            {{p.item}}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="SellForm.controls.item.touched && SellForm.controls.item.invalid">
+          <span *ngIf="SellForm.controls.item.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Enter Number of Items </mat-label>
+        <input matInput #input min="0" type="number" placeholder="Ex. 11" formControlName="numItems">
+        <mat-error *ngIf="SellForm.controls.numItems.touched && SellForm.controls.numItems.invalid">
+          <span *ngIf="SellForm.controls.numItems.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-group text-center">
+        <button mat-raised-button color="accent" type="submit">Sell</button>
+        <button mat-raised-button color="danger" (click)="cancel()" type="button">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>

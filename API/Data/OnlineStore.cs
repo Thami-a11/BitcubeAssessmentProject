@@ -22,37 +22,33 @@ namespace API.Data
         public void AddProductsToInventory(ProductPurchaseOrder purchaseOrder)
         {
             purchaseOrder.Item = purchaseOrder.Item.ToLower();
+            purchaseOrder.ProductType = purchaseOrder.ProductType.ToLower();
             _dataContext.ProductPurchaseOrders.Add(purchaseOrder);
+
+
         }
 
         public InventoryItemSummary GetInventoryItemSummary(ProductType StockType)
         {
             StockType.ProductItemType = StockType.ProductItemType.ToLower();
-            // var Summary = _dataContext.InventoryItemSummaries.
-            // Include(p => p.Products).AsQueryable();
 
             var product = _dataContext.ProductPurchaseOrders
-                .SingleOrDefault(x => x.Item == StockType.ProductItemType);
+            .Where(x => x.Item == StockType.ProductItemType).FirstOrDefault();
 
-            var Prices = _dataContext.ProductPrices
-             .Where(x => x.Products == product)
-             .FirstOrDefault();
+             var price = _dataContext.ProductPrices
+            .Where(x => x.ProductPurchaseOrderId == product.Id &&
+            x.Products == product).FirstOrDefault();
 
-            var Count = _dataContext.ProductPrices
-            .Where(x => x.Products == product).AsQueryable();
-
-            var AvgPrice = Prices.Price / Count.Count();
-
-            var item = new InventoryItemSummary
+             InventoryItemSummary item = new InventoryItemSummary()
             {
-                AvgPrice = AvgPrice,
+                AvgPrice = price.Price,
                 NumItems = product.NumItems,
-                ProductPurchaseOrderId = product.Id,
+                ProductPurchaseOrderId = price.ProductPurchaseOrderId,
                 Products = product
             };
-            _dataContext.InventoryItemSummaries.Add(item);
-
+            _dataContext.Entry(item).State = EntityState.Modified;
             return item;
+
         }
 
         public InventorySummary GetInventorySummary()
@@ -71,15 +67,10 @@ namespace API.Data
         {
             itemsSoldOrder.Item = itemsSoldOrder.Item.ToLower();
             var product = new ProductPurchaseOrder();
-            if (itemsSoldOrder.Item == "laptops" || itemsSoldOrder.Item == "tablets" || itemsSoldOrder.Item == "phones")
-            {
+
                 product = _dataContext.ProductPurchaseOrders
                     .SingleOrDefault(x => x.Item == itemsSoldOrder.Item);
-            }
-            else
-            {
-                return new ProductSoldResults { Message = "this product is invalid" };
-            }
+
 
             if (product.Item == null)
             {
@@ -105,11 +96,10 @@ namespace API.Data
             Update(ItemInInventory);
 
 
-
             var results = _mapper.Map<ProductsSellOrder, ProductSoldResults>(itemsSoldOrder);
             results.Message = "Sold!!";
             results.ProductType = ItemInInventory.ProductType;
-            results.TotalPrice = (price.QuantityPrice / itemsSoldOrder.NumItems) * price.Price;
+            results.TotalPrice = price.Price;
             return results;
         }
         public void AddPrice(ProductPrice productPrice)
@@ -117,8 +107,19 @@ namespace API.Data
             var product = _dataContext.ProductPurchaseOrders
                 .SingleOrDefault(x => x.Id == productPrice.ProductPurchaseOrderId);
             productPrice.Products = product;
+            productPrice.QuantityPrice =product.NumItems;
 
             _dataContext.ProductPrices.Add(productPrice);
+
+
+            InventoryItemSummary item = new InventoryItemSummary()
+            {
+                AvgPrice = productPrice.Price,
+                NumItems = product.NumItems,
+                ProductPurchaseOrderId = productPrice.Products.Id,
+                Products = product
+            };
+            _dataContext.InventoryItemSummaries.Add(item);
         }
 
         private void Update(ProductPurchaseOrder productPurchaseOrder)

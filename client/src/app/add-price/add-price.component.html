@@ -1,0 +1,46 @@
+<form [formGroup]='PriceForm' (ngSubmit)="PriceForm.valid && submit()" autocomplete="off">
+  <div class="boarder">
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label> Avg Price </mat-label>
+      <input matInput #input min="0" type="number" formControlName="price">
+      <span matPrefix>R&nbsp;</span>
+      <span matSuffix>.00</span>
+      <mat-error *ngIf="PriceForm.controls.price.touched && PriceForm.controls.price.invalid">
+        <span *ngIf="PriceForm.controls.price.errors.required">This field is mandatory.</span>
+      </mat-error>
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="fill">
+        <mat-label>Select Item Quntity </mat-label>
+        <mat-select formControlName="price">
+          <mat-option>--</mat-option>
+          <mat-option *ngFor="let p of numItems" [value]="p.numItems">
+            p.numItems
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="PriceForm.controls.price.touched && PriceForm.controls.price.invalid">
+          <span *ngIf="PriceForm.controls.price.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field> -->
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select Item </mat-label>
+      <mat-select formControlName="productPurchaseOrderId">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let p of products?.products" [value]="p.id">
+          {{p.item}}
+        </mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="PriceForm.controls.productPurchaseOrderId.touched && PriceForm.controls.productPurchaseOrderId.invalid">
+        <span *ngIf="PriceForm.controls.productPurchaseOrderId.errors.required">This field is mandatory.</span>
+      </mat-error>
+    </mat-form-field>
+    <div class="form-group text-center">
+      <button mat-raised-button color="accent" type="submit">add price</button>
+      <button mat-raised-button color="danger" (click)="cancel()" type="button">
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>

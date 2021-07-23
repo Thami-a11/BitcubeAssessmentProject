@@ -1,0 +1,31 @@
+<div class="boarder"  >
+  <div *ngIf="Item">
+  <mat-form-field appearance="fill">
+    <mat-label>Price </mat-label>
+    <input matInput #input disabled name="avgPrice" [(ngModel)]="Item.avgPrice">
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-label> Number of Items </mat-label>
+    <input matInput #input disabled name="numItems" [(ngModel)]="Item.numItems">
+  </mat-form-field>
+  </div>
+  <form [formGroup]='ItemForm' (ngSubmit)="ItemForm.valid && submit()" autocomplete="off">
+    <mat-form-field appearance="fill">
+      <mat-label>Select Item </mat-label>
+      <mat-select formControlName="productItemType">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let p of products?.products" [value]="p.item">
+          {{p.item}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="ItemForm.controls.productItemType.touched && ItemForm.controls.productItemType.invalid">
+        <span *ngIf="ItemForm.controls.productItemType.errors.required">This field is mandatory.</span>
+      </mat-error>
+    </mat-form-field>
+    <div class="form-group text-center">
+      <button mat-raised-button color="accent" type="submit">select product Item</button>
+    </div>
+
+  </form>
+</div>

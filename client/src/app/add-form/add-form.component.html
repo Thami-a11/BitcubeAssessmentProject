@@ -1,0 +1,50 @@
+  <form [formGroup]='AddForm' (ngSubmit)="AddForm.valid && submit()" autocomplete="off">
+    <div class="boarder">
+
+      <mat-form-field hintLabel="e.g dell" appearance="fill">
+        <mat-label>Enter Item</mat-label>
+        <input matInput #input placeholder="Ex. dell" formControlName="item">
+        <mat-error *ngIf="AddForm.controls.item.touched && AddForm.controls.item.invalid">
+          <span *ngIf="AddForm.controls.item.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Enter Number of Items </mat-label>
+        <input matInput #input min="0" type="number" placeholder="Ex. 11" formControlName="numItems">
+        <mat-error *ngIf="AddForm.controls.numItems.touched && AddForm.controls.numItems.invalid">
+          <span *ngIf="AddForm.controls.numItems.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label> Avg Price </mat-label>
+        <input matInput #input min="0" type="number" formControlName="price">
+        <span matPrefix>R&nbsp;</span>
+        <span matSuffix>.00</span>
+        <mat-error *ngIf="AddForm.controls.numItems.touched && AddForm.controls.numItems.invalid">
+          <span *ngIf="AddForm.controls.numItems.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="fill">
+        <mat-label>Enter Item Type</mat-label>
+        <mat-select formControlName="productType">
+          <mat-option>--</mat-option>
+          <mat-option *ngFor="let type of Types" [value]="type.value">
+            {{type.viewValue}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="AddForm.controls.productType.touched && AddForm.controls.productType.invalid">
+          <span *ngIf="AddForm.controls.productType.errors.required">This field is mandatory.</span>
+        </mat-error>
+      </mat-form-field>
+
+
+      <div class="form-group text-center">
+        <button mat-raised-button color="accent" type="submit">add</button>
+        <button mat-raised-button color="danger" (click)="cancel()" type="button">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>

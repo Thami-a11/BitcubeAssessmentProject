@@ -12,6 +12,7 @@ namespace API.interfaces
         ProductSoldResults SellProductFromInventory(ProductsSellOrder itemsSoldOrder);
         InventoryItemSummary GetInventoryItemSummary(ProductType StockType);
         InventorySummary GetInventorySummary();
+        
         Task<bool> SaveAllAsync();
     }
 }

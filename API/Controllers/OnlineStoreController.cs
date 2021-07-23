@@ -3,7 +3,7 @@ using API.Controllers.Entities;
 using API.interfaces;
 using API.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+
 
 namespace API.Controllers
 {
@@ -46,7 +46,7 @@ namespace API.Controllers
             return BadRequest(solditems.Message);
         }
 
-        [HttpGet("GetItemSummary")]
+        [HttpPost("GetItemSummary")]
         public InventoryItemSummary GetItemSummary(ProductType stockType)
         {
             return _onlineStore.GetInventoryItemSummary(stockType);
@@ -59,6 +59,5 @@ namespace API.Controllers
         }
 
     }
-
 
 }
